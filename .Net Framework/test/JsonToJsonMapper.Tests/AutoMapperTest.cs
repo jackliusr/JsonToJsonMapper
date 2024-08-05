@@ -1,17 +1,16 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using JsonToJsonMapper;
 using System.IO;
 using Newtonsoft.Json;
+using Xunit;
 
 namespace MipUnitTest
 {
-    [TestClass]
     public class AutoMapperTest
     {
         //Test
-        [TestMethod, Description("Validate that the exception is thrown by auto mapper if mapping json is invalid")]
+        [Fact(DisplayName ="Validate that the exception is thrown by auto mapper if mapping json is invalid")]
         public void Validate_AutoMapper_ExceptionThrownByInvalidMappingJson()
         {
             // Arrange
@@ -30,11 +29,11 @@ namespace MipUnitTest
             catch (Exception ex)
             {
                 //Assert
-                Assert.IsTrue(string.Equals(ex.Message, string.Format("Invalid mapping json")));
+                Assert.True(string.Equals(ex.Message, string.Format("Invalid mapping json")));
             }
         }
 
-        [TestMethod, Description("Validate that the property is not set if value datatype is different that the datatype mentioned in the config.")]
+        [Fact(DisplayName = "Validate that the property is not set if value datatype is different that the datatype mentioned in the config.")]
         public void Validate_AutoMapper_InvalidDatatype()
         {
             // Arrange
@@ -54,10 +53,10 @@ namespace MipUnitTest
             catch (Exception ex)
             {
                 //Assert
-                Assert.AreEqual(ex.Message, "Invalid mapping json");
+                Assert.Equal(ex.Message, "Invalid mapping json");
             }
         }
-        [TestMethod, Description("Validate that the property is not set if the value is null")]
+        [Fact(DisplayName = "Validate that the property is not set if the value is null")]
         public void Validate_AutoMapper_NullValue()
         {
             // Arrange
@@ -72,14 +71,14 @@ namespace MipUnitTest
             try
             {
                 var lead = (LeadRecord)mapper.Transform(inputJson);
-                Assert.IsNull(lead.Name);
+                Assert.Null(lead.Name);
             }
             catch (Exception)
             {
                 Assert.Fail();
             }
         }
-        [TestMethod, Description("Validate that the property is not set if the value is empty string except if the datatype is string.")]
+        [Fact(DisplayName = "Validate that the property is not set if the value is empty string except if the datatype is string.")]
         public void Validate_AutoMapper_EmptyString()
         {
             // Arrange
@@ -94,8 +93,8 @@ namespace MipUnitTest
             try
             {
                 var lead = (LeadRecord)mapper.Transform(inputJson);
-                Assert.IsTrue(lead.AllowEmail == false);
-                Assert.IsTrue(lead.LeadScore == 101);
+                Assert.True(lead.AllowEmail == false);
+                Assert.True(lead.LeadScore == 101);
             }
             catch (Exception)
             {
@@ -103,7 +102,7 @@ namespace MipUnitTest
             }
         }
 
-        [TestMethod, Description("Validate that the datetime value is not modified due to transformation.")]
+        [Fact(DisplayName = "Validate that the datetime value is not modified due to transformation.")]
         public void Validate_AutoMapper_DateTimeValidation()
         {
             // Arrange
@@ -119,7 +118,7 @@ namespace MipUnitTest
             {
                 var lead = mapper.TransformIntoJson(inputJson, true);
 
-                Assert.IsTrue(lead.Contains("2015-10-29T07:48:27.767-07:00") && lead.Contains("2015-10-29T07:48:27.767-07:00")
+                Assert.True(lead.Contains("2015-10-29T07:48:27.767-07:00") && lead.Contains("2015-10-29T07:48:27.767-07:00")
                     && lead.Contains("11/02/2015 15:15:00 -08:00") && lead.Contains("11/02/2015 16:30:00 -08:00") && lead.Contains("8707"));
             }
             catch (Exception)
@@ -128,7 +127,7 @@ namespace MipUnitTest
             }
         }
 
-        [TestMethod, Description("Validate that the property is set to default value if the value is not passed.")]
+        [Fact(DisplayName = "Validate that the property is set to default value if the value is not passed.")]
         public void Validate_AutoMapper_DefaultValue1()
         {
             // Arrange
@@ -143,7 +142,7 @@ namespace MipUnitTest
             try
             {
                 var lead = (LeadRecord)mapper.Transform(inputJson);
-                Assert.IsTrue(lead.Name == "NA");
+                Assert.True(lead.Name == "NA");
             }
             catch (Exception)
             {
@@ -151,7 +150,7 @@ namespace MipUnitTest
             }
         }
 
-        [TestMethod, Description("Validate that the property is mapped according to input value.")]
+        [Fact(DisplayName = "Validate that the property is mapped according to input value.")]
         public void Validate_AutoMapper_DefaultValue2()
         {
             // Arrange
@@ -166,14 +165,14 @@ namespace MipUnitTest
             try
             {
                 var lead = (LeadRecord)mapper.Transform(inputJson);
-                Assert.IsTrue(lead.Name == "true");
+                Assert.True(lead.Name == "true");
             }
             catch (Exception)
             {
                 Assert.Fail();
             }
         }
-        [TestMethod, Description("Validate that the property is  set to default value if the value is not passed.")]
+        [Fact(DisplayName = "Validate that the property is  set to default value if the value is not passed.")]
         public void Validate_AutoMapper_DefaultValue3()
         {
             // Arrange
@@ -188,7 +187,7 @@ namespace MipUnitTest
             try
             {
                 var lead = (LeadRecord)mapper.Transform(inputJson);
-                Assert.IsTrue(lead.Name == "NA");
+                Assert.True(lead.Name == "NA");
             }
             catch (Exception)
             {
@@ -196,7 +195,7 @@ namespace MipUnitTest
             }
         }
 
-        [TestMethod, Description("Validate that the property is  set to custom value if the value passed is empty.")]
+        [Fact(DisplayName = "Validate that the property is  set to custom value if the value passed is empty.")]
         public void Validate_AutoMapper_EmptyValue()
         {
             // Arrange
@@ -211,7 +210,7 @@ namespace MipUnitTest
             try
             {
                 var lead = (LeadRecord)mapper.Transform(inputJson);
-                Assert.IsTrue(lead.Name == "true");
+                Assert.True(lead.Name == "true");
             }
             catch (Exception)
             {
@@ -219,7 +218,7 @@ namespace MipUnitTest
             }
         }
 
-        [TestMethod, Description("Complex transformation test - Validate that the value returned is a complex type.")]
+        [Fact(DisplayName = "Complex transformation test - Validate that the value returned is a complex type.")]
         public void Complex2FlatTransformationTest()
         {
             //Arrange - Certain input json with complex object
@@ -232,10 +231,10 @@ namespace MipUnitTest
             var flatObject = JObject.Parse(mapper.TransformIntoJson(inputJson, false));
 
             //Assert
-            Assert.AreEqual(flatObject.HasValues, true);
-            Assert.AreEqual(flatObject.Count, 4);
+            Assert.Equal(flatObject.HasValues, true);
+            Assert.Equal(flatObject.Count, 4);
         }
-        [TestMethod, Description("Transpose handler test - Validate that the value returned is transposed.")]
+        [Fact(DisplayName = "Transpose handler test - Validate that the value returned is transposed.")]
         public void PromoteAttributesToPropertyTestWithoutPrependKeyText()
         {
             //Arrange - Certain input json with complex object
@@ -249,11 +248,11 @@ namespace MipUnitTest
             var expectedResponse = @"{""Content"":[{""id"":2,""leadId"":6,""SourceType"":""Webpagevisit"",""SourceInfo"":""http://search.yahoo.com/search?p=train+cappuccino+army""},{""id"":3,""leadId"":9,""ClientIPAddress"":""203.141.7.100"",""UserAgent"":""Mozilla/5.0(Windows;U;WindowsNT5.1;en-US;rv:1.8.1.14)Gecko/20080404Firefox/2.0.0.14"",""WebpageID"":4,""WebpageURL"":""/anti-phishing.html""}]}";
             var value = response.Replace("\r", string.Empty).Replace("\n", string.Empty).Replace(" ", string.Empty);
             //Assert
-            Assert.AreEqual(value, expectedResponse);
+            Assert.Equal(value, expectedResponse);
         }
 
 
-        [TestMethod, Description("Transpose handler test - Validate that the value returned is transposed with prepend key text.")]
+        [Fact(DisplayName = "Transpose handler test - Validate that the value returned is transposed with prepend key text.")]
         public void PromoteAttributesToPropertyTestWithPrependKeyText()
         {
             //Arrange - Certain input json with complex object
@@ -267,12 +266,12 @@ namespace MipUnitTest
             var expectedResponse = @"{""Content"":[{""id"":2,""leadId"":6,""AttributeSourceType"":""Webpagevisit"",""AttributeSourceInfo"":""http://search.yahoo.com/search?p=train+cappuccino+army""},{""id"":3,""leadId"":9,""AttributeClientIPAddress"":""203.141.7.100"",""AttributeUserAgent"":""Mozilla/5.0(Windows;U;WindowsNT5.1;en-US;rv:1.8.1.14)Gecko/20080404Firefox/2.0.0.14"",""AttributeWebpageID"":4,""AttributeWebpageURL"":""/anti-phishing.html""}]}";
             var value = response.Replace("\r", string.Empty).Replace("\n", string.Empty).Replace(" ", string.Empty);
             //Assert
-            Assert.IsTrue(value.Contains("AttributeWebpageURL"));
-            Assert.AreEqual(value, expectedResponse);
+            Assert.True(value.Contains("AttributeWebpageURL"));
+            Assert.Equal(value, expectedResponse);
         }
 
 
-        [TestMethod, Description("Roslyn script handler test - Validate that the value returned is after executing the script.")]
+        [Fact(DisplayName = "Roslyn script handler test - Validate that the value returned is after executing the script.")]
         public void RoslynTest()
         {
             //Arrange - Certain input json with complex object
@@ -286,10 +285,10 @@ namespace MipUnitTest
             var expectedResponse = @"{""EventList"":[{""title"":""Windows 10 for device management"",""accountCode"":""C-and-E"",""Id"":""APAC-1PWBNR3-0331-16-HQ"",""Status"":""Live"",""timezone"":""(GMT+05:00) Islamabad, Karachi, Tashkent"",""source"":""Certain"",""EventCategory"":""Onsite Event"",""StartDate"":""2016-03-31T08:00:00Z"",""EndDate"":""2016-03-31T16:00:00Z"",""locationCode"":""Webinar"",""Description"":""A"",""PrimaryLanguage"":[""""],""PrimaryTargetAudience"":[""""],""Product"":[""""],""Category"":""TBD"",""URL"":""www.microsoft.com""}],""RequestId"":""4bfaac9c-1e0d-4620-b9e6-66095376e99a""}";
             var value = response.Replace("\r", string.Empty).Replace("\n", string.Empty).Replace(" ", string.Empty);
             //Assert
-            Assert.AreEqual(value, expectedResponse.Replace(" ", string.Empty));
+            Assert.Equal(value, expectedResponse.Replace(" ", string.Empty));
         }
 
-        [TestMethod, Description("Parent data test - Validate that the value returned is from the parent JObject.")]
+        [Fact(DisplayName = "Parent data test - Validate that the value returned is from the parent JObject.")]
         public void ParentDataTest()
         {
             //Arrange - Certain input json with complex object
@@ -303,10 +302,10 @@ namespace MipUnitTest
             var expectedResponse = @"{""Answers"":[{""eventId"":""100"",""questionId"":""Q1"",""value"":""1http://na-ab11.marketo.com/rs/113-EDC-810/images/MSC Test Banner.jpg""},{""eventId"":""100"",""questionId"":""Q1"",""value"":""2http://na-ab11.marketo.com/rs/113-EDC-810/images/MSC Test Banner.jpg""},{""eventId"":""100"",""questionId"":""Q2"",""value"":""3Consumers,Partners""},{""eventId"":""200"",""questionId"":""Q3""},{""eventId"":""200"",""questionId"":""Q4"",""value"":""4Klo""}]}";
             var value = response.Replace("\r", string.Empty).Replace("\n", string.Empty).Replace(" ", string.Empty);
             //Assert
-            Assert.AreEqual(value, expectedResponse.Replace(" ", string.Empty));
+            Assert.Equal(value, expectedResponse.Replace(" ", string.Empty));
         }
 
-        [TestMethod, Description("ValueMappingHandler test - Validate that the default value is returned.")]
+        [Fact(DisplayName = "ValueMappingHandler test - Validate that the default value is returned.")]
         public void Validate_ValueMappingHandler_DefaultValue()
         {
             // Arrange
@@ -318,14 +317,14 @@ namespace MipUnitTest
             try
             {
                 var response = handler.Run(JObject.Parse(config), JObject.Parse(input));
-                Assert.IsTrue(response == "Certain");
+                Assert.True(response == "Certain");
             }
             catch (Exception)
             {
                 Assert.Fail();
             }
         }
-        [TestMethod, Description("ValueMappingHandler test - Validate that the default value is returned is UTC now.")]
+        [Fact(DisplayName = "ValueMappingHandler test - Validate that the default value is returned is UTC now.")]
         public void Validate_ValueMappingHandler_DefaultValue_UtcNow()
         {
             // Arrange
@@ -338,14 +337,14 @@ namespace MipUnitTest
             {
                 var response = handler.Run(JObject.Parse(config), JObject.Parse(input));
                 DateTime date;
-                Assert.IsTrue(DateTime.TryParse(response, out date));
+                Assert.True(DateTime.TryParse(response, out date));
             }
             catch (Exception)
             {
                 Assert.Fail();
             }
         }
-        [TestMethod, Description("ValueMappingHandler test - Validate that the default value is returned is new Guid.")]
+        [Fact(DisplayName = "ValueMappingHandler test - Validate that the default value is returned is new Guid.")]
         public void Validate_ValueMappingHandler_DefaultValue_Guid()
         {
             // Arrange
@@ -358,14 +357,14 @@ namespace MipUnitTest
             {
                 var response = handler.Run(JObject.Parse(config), JObject.Parse(input));
                 Guid guid;
-                Assert.IsTrue(Guid.TryParse(response, out guid));
+                Assert.True(Guid.TryParse(response, out guid));
             }
             catch (Exception)
             {
                 Assert.Fail();
             }
         }
-        [TestMethod, Description("ValueMappingHandler test - Validate that the default value is returned is mapped.")]
+        [Fact(DisplayName = "ValueMappingHandler test - Validate that the default value is returned is mapped.")]
         public void Validate_ValueMappingHandler_DefaultValue_Mapping()
         {
             // Arrange
@@ -377,7 +376,7 @@ namespace MipUnitTest
             try
             {
                 var response = handler.Run(JObject.Parse(config), JObject.Parse(input));
-                Assert.IsTrue(response == "2");
+                Assert.True(response == "2");
             }
             catch (Exception)
             {
@@ -385,7 +384,7 @@ namespace MipUnitTest
             }
         }
 
-        [TestMethod, Description("Function handler test - Validate that the value returned is concatenated.")]
+        [Fact(DisplayName = "Function handler test - Validate that the value returned is concatenated.")]
         public void FunctionTest_ConCat()
         {
             //Arrange - Certain input json with complex object
@@ -399,9 +398,9 @@ namespace MipUnitTest
             var expectedResponse = "{\"EventList\":[{\"title\":\"https://info.microsoft.com,Hello world!\"},{\"title\":\"First answer,Last answer,Hello world!\"},{\"title\":\",Hello world!\"}]}";
 
             //Assert
-            Assert.AreEqual(response, expectedResponse);
+            Assert.Equal(response, expectedResponse);
         }
-        [TestMethod, Description("Function handler test - Validate that the value returned is concatenated when delimeter is null.")]
+        [Fact(DisplayName = "Function handler test - Validate that the value returned is concatenated when delimeter is null.")]
         public void FunctionTest_ConCat_WithoutDelimeter()
         {
             //Arrange - Certain input json with complex object
@@ -415,10 +414,10 @@ namespace MipUnitTest
             var expectedResponse = "{\"EventList\":[{\"title\":\"https://info.microsoft.comHello world!\"},{\"title\":\"First answerLast answerHello world!\"},{\"title\":\"Hello world!\"}]}";
 
             //Assert
-            Assert.AreEqual(response, expectedResponse);
+            Assert.Equal(response, expectedResponse);
         }
 
-        [TestMethod, Description("Function handler test - Validate that the value returned is concatenated when params collection is null.")]
+        [Fact(DisplayName = "Function handler test - Validate that the value returned is concatenated when params collection is null.")]
         public void FunctionTest_ConCat_EmptyParamCollection()
         {
             //Arrange - Certain input json with complex object
@@ -432,10 +431,10 @@ namespace MipUnitTest
             var expectedResponse = "{\"EventList\":[{\"title\":\"Hello world!\"},{\"title\":\"Hello world!\"},{\"title\":\"Hello world!\"}]}";
 
             //Assert
-            Assert.AreEqual(response, expectedResponse);
+            Assert.Equal(response, expectedResponse);
         }
 
-        [TestMethod, Description("Function handler test - Validate that the value returned has no empty array.")]
+        [Fact(DisplayName = "Function handler test - Validate that the value returned has no empty array.")]
         public void IgnoreEmptyArrayTest_True()
         {
             //Arrange - Certain input json with complex object
@@ -449,9 +448,9 @@ namespace MipUnitTest
             var expectedResponse = "{}";
 
             //Assert
-            Assert.AreEqual(response, expectedResponse);
+            Assert.Equal(response, expectedResponse);
         }
-        [TestMethod, Description("Function handler test - Validate that the value returned is empty array.")]
+        [Fact(DisplayName = "Function handler test - Validate that the value returned is empty array.")]
         public void IgnoreEmptyArrayTest_False()
         {
             //Arrange - Certain input json with complex object
@@ -465,9 +464,9 @@ namespace MipUnitTest
             var expectedResponse = "{\"EventList\":[]}";
 
             //Assert
-            Assert.AreEqual(response, expectedResponse);
+            Assert.Equal(response, expectedResponse);
         }
-        [TestMethod, Description("Function handler test - Validate that the value returned is empty array.")]
+        [Fact(DisplayName = "Function handler test - Validate that the value returned is empty array.")]
         public void IgnoreEmptyArrayTest_NotSet()
         {
             //Arrange - Certain input json with complex object
@@ -481,10 +480,10 @@ namespace MipUnitTest
             var expectedResponse = "{\"EventList\":[]}";
 
             //Assert
-            Assert.AreEqual(response, expectedResponse);
+            Assert.Equal(response, expectedResponse);
         }
 
-        [TestMethod, Description("Value handler test - Validate transformation if default value is empty.")]
+        [Fact(DisplayName = "Value handler test - Validate transformation if default value is empty.")]
         public void Automapper_EmptyDefaultValueTest()
         {
             //Arrange - Certain input json with complex object
@@ -498,9 +497,9 @@ namespace MipUnitTest
             var expectedResponse = "{\"__meta__Entity\":\"GenericPresales\",\"EncryptedFields\":\" \"}";
 
             //Assert
-            Assert.AreEqual(expectedResponse, response);
+            Assert.Equal(expectedResponse, response);
         }
-        [TestMethod, Description("Function handler test - Validate that the value returned is replaced value.")]
+        [Fact(DisplayName = "Function handler test - Validate that the value returned is replaced value.")]
         public void FunctionTest_ReplaceValue()
         {
             //Arrange - Certain input json with complex object
@@ -514,10 +513,10 @@ namespace MipUnitTest
             var expectedResponse = "{\"EventList\":[{\"title\":false},{\"title\":true},{\"title\":true}]}";
 
             //Assert
-            Assert.AreEqual(response, expectedResponse);
+            Assert.Equal(response, expectedResponse);
         }
         
-        [TestMethod, Description("Function handler test - Validate that the value returned is replaced value When Path is given.")]
+        [Fact(DisplayName = "Function handler test - Validate that the value returned is replaced value When Path is given.")]
         public void FunctionTest_ReplaceValueNode_Failure()
         {
             //Arrange - Certain input json with complex object
@@ -533,9 +532,9 @@ namespace MipUnitTest
             var expectedResponse = "{\"Output\":\"{\\r\\n  \\\"PreferenceTopic\\\": \\\"NA\\\"\\r\\n}\"}";
 
             //Assert
-            Assert.AreEqual(response, expectedResponse);
+            Assert.Equal(response, expectedResponse);
         }
-        [TestMethod, Description("Function handler test - Validate that the value returned is replaced value When Path is given.")]
+        [Fact(DisplayName = "Function handler test - Validate that the value returned is replaced value When Path is given.")]
         public void FunctionTest_ReplaceValueNode_Sucess()
         {
             //Arrange - Certain input json with complex object
@@ -551,10 +550,10 @@ namespace MipUnitTest
             var expectedResponse = "{\"Output\":\"{\\r\\n  \\\"PreferenceTopic\\\": \\\"RV\\\"\\r\\n}\"}";
 
             //Assert
-            Assert.AreEqual(response, expectedResponse);
+            Assert.Equal(response, expectedResponse);
         }
 
-        [TestMethod, Description("Function handler test - Validate that the value returned is replaced value When Path is given.")]
+        [Fact(DisplayName = "Function handler test - Validate that the value returned is replaced value When Path is given.")]
         public void FunctionTest_ReplaceValueNode_JsonPath()
         {
             //Arrange - Certain input json with complex object
@@ -570,10 +569,10 @@ namespace MipUnitTest
             var expectedResponse = "{\"Output\":\"{\\r\\n  \\\"PreferenceTopic\\\": \\\"MOD\\\"\\r\\n}\"}";
 
             //Assert
-            Assert.AreEqual(response, expectedResponse);
+            Assert.Equal(response, expectedResponse);
         }
 
-        [TestMethod, Description("Function handler test - Validate that the value returned is replaced value When Path is given.")]
+        [Fact(DisplayName = "Function handler test - Validate that the value returned is replaced value When Path is given.")]
         public void FunctionTest_ReplaceValueNode_JsonPath_EmptyCompareValue()
         {
             //Arrange - Certain input json with complex object
@@ -589,10 +588,10 @@ namespace MipUnitTest
             var expectedResponse = "{\"Output\":\"{\\r\\n  \\\"PreferenceTopic\\\": \\\"MOD\\\"\\r\\n}\"}";
 
             //Assert
-            Assert.AreEqual(response, expectedResponse);
+            Assert.Equal(response, expectedResponse);
         }
 
-        [TestMethod, Description("Function handler test - Validate that the value returned is replaced value When Path is given.")]
+        [Fact(DisplayName = "Function handler test - Validate that the value returned is replaced value When Path is given.")]
         public void FunctionTest_ReplaceValue_ReturnValue_Node()
         {
             //Arrange - Certain input json with complex object
@@ -608,10 +607,10 @@ namespace MipUnitTest
             var expectedResponse = "{\"Output\":\"{\\r\\n  \\\"PreferenceTopic\\\": \\\"MOD\\\"\\r\\n}\"}";
 
             //Assert
-            Assert.AreEqual(response, expectedResponse);
+            Assert.Equal(response, expectedResponse);
         }
 
-        [TestMethod, Description("Function handler test - Validate that the value returned is replaced value When Path is given.")]
+        [Fact(DisplayName = "Function handler test - Validate that the value returned is replaced value When Path is given.")]
         public void FunctionTest_ReplaceValueNodeTwo()
         {
             //Arrange - Certain input json with complex object
@@ -627,12 +626,12 @@ namespace MipUnitTest
             var expectedResponse = "{\"Output\":\"{\\r\\n  \\\"PreferenceTopic\\\": \\\"\\\"\\r\\n}\"}";
 
             //Assert
-            Assert.AreEqual(response, expectedResponse);
+            Assert.Equal(response, expectedResponse);
         }
 
 
 
-        [TestMethod, Description("Function handler test - Validate the value returned when compareToValue and input value are both null.")]
+        [Fact(DisplayName = "Function handler test - Validate the value returned when compareToValue and input value are both null.")]
         public void FunctionTest_ReplaceValue_NullCompareToValueAndInputValue_RegexTest()
         {
             //Arrange - Certain input json 
@@ -646,10 +645,10 @@ namespace MipUnitTest
             var expectedResponse = "{\"address\":\"def\"}";
 
             //Assert
-            Assert.AreEqual(response, expectedResponse);
+            Assert.Equal(response, expectedResponse);
         }
 
-        [TestMethod, Description("Function handler test - Validate the value returned when compareToValue is null and inputvalue is not null.")]
+        [Fact(DisplayName = "Function handler test - Validate the value returned when compareToValue is null and inputvalue is not null.")]
         public void FunctionTest_ReplaceValue_NulllCompareToValue_RegexTest()
         {
             //Arrange - Certain input json 
@@ -663,10 +662,10 @@ namespace MipUnitTest
             var expectedResponse = "{\"address\":\"abc\"}";
 
             //Assert
-            Assert.AreEqual(response, expectedResponse);
+            Assert.Equal(response, expectedResponse);
         }
 
-        [TestMethod, Description("Function handler test - Validate the value returned when compareToValue is empty.")]
+        [Fact(DisplayName = "Function handler test - Validate the value returned when compareToValue is empty.")]
         public void FunctionTest_ReplaceValue_EmptyCompareToValue_RegexTest()
         {
             //Arrange - Certain input json 
@@ -680,10 +679,10 @@ namespace MipUnitTest
             var expectedResponse = "{\"address\":\"def\"}";
 
             //Assert
-            Assert.AreEqual(response, expectedResponse);
+            Assert.Equal(response, expectedResponse);
         }
 
-        [TestMethod, Description("Function handler test - Validate the value returned when compareToValue is a nonempty,non null regex.")]
+        [Fact(DisplayName = "Function handler test - Validate the value returned when compareToValue is a nonempty,non null regex.")]
         public void FunctionTest_ReplaceValue_RegexTest()
         {
             //Arrange - Certain input json with complex object
@@ -697,10 +696,10 @@ namespace MipUnitTest
             var expectedResponse = "{\"EventList\":[{\"title\":false},{\"title\":true},{\"title\":true}]}";
 
             //Assert
-            Assert.AreEqual(response, expectedResponse);
+            Assert.Equal(response, expectedResponse);
         }
 
-        [TestMethod, Description("Value handler test - Validate transformation if ignoreNull is set as false.")]
+        [Fact(DisplayName = "Value handler test - Validate transformation if ignoreNull is set as false.")]
         public void Automapper_IgnoreNullFalseTest()
         {
             //Arrange - Certain input json with complex object
@@ -713,10 +712,10 @@ namespace MipUnitTest
             var response = mapper.TransformIntoJson(JObject.Parse(inputJson), true);
             string expectedResponse = "{ \"EventId\": \"-1\", \"SchemaName\": \"JournalEvents.Certain.EventQuestionAnswersDetail\", \"ContentObject\": [ { \"accountCode\": \"C-and-E\", \"eventCode\": \"tmpl-polish-devcl\", \"questionName\": \"Hero Banner Image\", \"questionLabel\": \"Hero Banner Image\", \"questionCode\": \"Hero Banner Image\", \"questionType\": \"Image\", \"answerLabel\": \"answerLabelXYZ\", \"answerCode\": \"answerCodeXYZ\", \"answerName\": \"answerNameXYZ\" }, { \"accountCode\": \"C-and-E\", \"eventCode\": \"tmpl-polish-devcl\", \"questionName\": \"Program-HeaderText\", \"questionLabel\": \"Program-HeaderText\", \"questionCode\": \"Program-HeaderText\", \"questionType\": \"Text\", \"answerLabel\": null, \"answerCode\": null, \"answerName\": null }, { \"accountCode\": \"C-and-E\", \"eventCode\": \"tmpl-polish-devcl\", \"questionName\": \"Program-Description\", \"questionLabel\": \"Program-Description (Registration Form - Paragraph 1)\", \"questionCode\": \"Program-Description\", \"questionType\": \"Textarea\", \"answerLabel\": null, \"answerCode\": null, \"answerName\": null } ] }";
             //Assert
-            Assert.IsTrue(JToken.DeepEquals(response, JObject.Parse(expectedResponse)));
+            Assert.True(JToken.DeepEquals(response, JObject.Parse(expectedResponse)));
         }
 
-        [TestMethod, Description("Function handler test - Validate that the value returned is first index after split")]
+        [Fact(DisplayName = "Function handler test - Validate that the value returned is first index after split")]
         public void FunctionTest_SplitWithOneIndex()
         {
             //Arrange - Certain input json with complex object
@@ -730,10 +729,10 @@ namespace MipUnitTest
             var expectedResponse = "{\"Key\":[{\"Key\":\"12121212333\"}]}";
 
             //Assert
-            Assert.AreEqual(response, expectedResponse);
+            Assert.Equal(response, expectedResponse);
         }
 
-        [TestMethod, Description("Function handler test - Validate that the value returned is first and second index after split")]
+        [Fact(DisplayName = "Function handler test - Validate that the value returned is first and second index after split")]
         public void FunctionTest_SplitWithTwoIndex()
         {
             //Arrange - Certain input json with complex object
@@ -747,10 +746,10 @@ namespace MipUnitTest
             var expectedResponse = "{\"Data\":[{\"Key\":\"12121212333\",\"Message\":\"AKJKKAJDKAKJKKKDKSKAK\"}]}";
 
             //Assert
-            Assert.AreEqual(response, expectedResponse);
+            Assert.Equal(response, expectedResponse);
         }
 
-        [TestMethod, Description("Function handler test - Validate Upper case functionality")]
+        [Fact(DisplayName = "Function handler test - Validate Upper case functionality")]
         public void FunctionTest_TransformToUpperCase()
         {
             //Arrange - Certain input json with complex object
@@ -764,10 +763,10 @@ namespace MipUnitTest
             var expectedResponse = "{\"Data\":[{\"EmailAddress\":\"WINDOWS 10\"}]}";
 
             //Assert
-            Assert.AreEqual(response, expectedResponse);
+            Assert.Equal(response, expectedResponse);
         }
 
-        [TestMethod, Description("Function handler test - Validate Upper case functionality in Parent Node")]
+        [Fact(DisplayName = "Function handler test - Validate Upper case functionality in Parent Node")]
         public void FunctionTest_TransformToUpperCaseParent()
         {
             //Arrange - Certain input json with complex object
@@ -790,10 +789,10 @@ namespace MipUnitTest
             var expectedResponse = "{\"Data\":[{\"EmailAddress\":\"WINDOWS 10\",\"FirstName\":\"AP - Azure\",\"LastName\":\"C - AND - E\"}]}";
 
             //Assert
-            Assert.AreEqual(response, expectedResponse);
+            Assert.Equal(response, expectedResponse);
         }
 
-        [TestMethod, Description("Function handler test - Validate Upper case functionality")]
+        [Fact(DisplayName = "Function handler test - Validate Upper case functionality")]
         public void FunctionTest_TransformToLowerCase()
         {
             //Arrange - Certain input json with complex object
@@ -807,10 +806,10 @@ namespace MipUnitTest
             var expectedResponse = "{\"Data\":[{\"EmailAddress\":\"windows 10\"}]}";
 
             //Assert
-            Assert.AreEqual(response, expectedResponse);
+            Assert.Equal(response, expectedResponse);
         }
 
-        [TestMethod, Description("Validate that the datatype is set to input type if mapping datatype is set to null.")]
+        [Fact(DisplayName = "Validate that the datatype is set to input type if mapping datatype is set to null.")]
         public void Validate_AutoMapper_NullDataType()
         {
             // Arrange
@@ -825,7 +824,7 @@ namespace MipUnitTest
             try
             {
                 LeadRecord lead = (LeadRecord)mapper.Transform(inputJson);
-                Assert.IsTrue(lead.LeadScore == 100);
+                Assert.True(lead.LeadScore == 100);
             }
             catch (Exception)
             {
@@ -833,7 +832,7 @@ namespace MipUnitTest
             }
         }
 
-        [TestMethod, Description("Validate that the JObject and JArray are created With same Flattene Object.")]
+        [Fact(DisplayName = "Validate that the JObject and JArray are created With same Flattene Object.")]
         public void AutoMappperMappingForJObjectAndJarray()
         {
             // Arrange
@@ -851,7 +850,7 @@ namespace MipUnitTest
                 var output = mapper.TransformIntoJson(inputJson);
                 string expectedOutput = "{\"ProgramName\":\"test4\",\"Folder\":{\"id\":\"49\",\"type\":\"Folder\"},\"ProgramDescription\":\"xcvxbv\",\"ProgramType\":\"Default\",\"ProgramChannel\":\"Email Blast\",\"Costs\":[{\"startDate\":\"2015-01-01\",\"cost\":\"8360\"}]}";                
 
-                Assert.AreEqual(output, expectedOutput);
+                Assert.Equal(output, expectedOutput);
             }
             catch (Exception)
             {
@@ -859,7 +858,7 @@ namespace MipUnitTest
             }
         }
 
-        [TestMethod, Description("Validate that the datetime format is not changed after transformation.")]
+        [Fact(DisplayName = "Validate that the datetime format is not changed after transformation.")]
         public void AutoMappperMapping_ValidateDateTimeFormat()
         {
             // Arrange
@@ -876,8 +875,8 @@ namespace MipUnitTest
             {
                 var output = mapper.TransformIntoJson(JsonConvert.DeserializeObject<JObject>(inputJson), true);
 
-                Assert.AreEqual(output["ContentObject"][0]["ProgramDayDate"].ToString(), "2015-11-30T00:00:00");
-                Assert.AreEqual(output["ContentObject"][0]["ShortFormattedDate"].ToString(), "11/30/2015");                
+                Assert.Equal(output["ContentObject"][0]["ProgramDayDate"].ToString(), "2015-11-30T00:00:00");
+                Assert.Equal(output["ContentObject"][0]["ShortFormattedDate"].ToString(), "11/30/2015");                
             }
             catch (Exception)
             {
@@ -885,7 +884,7 @@ namespace MipUnitTest
             }
         }
 
-        [TestMethod, Description("Validate that the concatenation where nulls are present.")]
+        [Fact(DisplayName = "Validate that the concatenation where nulls are present.")]
         public void AutoMappperMapping_ConcatWithNull()
         {
             // Arrange
@@ -902,7 +901,7 @@ namespace MipUnitTest
             {
                 var output = mapper.TransformIntoJson(JsonConvert.DeserializeObject<JObject>(inputJson), true);
                 string expectedOutput = "{ \"batchId\": \"d7620d3b-188a-49a0-b540-29de82b6ae1c\", \"messageCorrelationId\": \"6a87a56f-618c-4d0b-ac96-09adad1f99d5\", \"responseId\": \"bcf0f3d0-7053-4924-b773-11776daf7692\", \"success\": false, \"EmailAddress\": \"P75LIOT4USIPA7RXVMPG@mipFT.com\", \"data\": { \"EmailAddress\": \"P75LIOT4USIPA7RXVMPG@mipFT.com\", \"success\": false, \"errors\": [ { \"message\": \"Validation Failed.\", \"type\": \"Validation Error\", \"validationErrors\": [ \"PropertyRequired for action at #/action\" ] } ] } } ";
-                Assert.IsTrue(JToken.DeepEquals(output, JObject.Parse(expectedOutput)));
+                Assert.True(JToken.DeepEquals(output, JObject.Parse(expectedOutput)));
 
             }
             catch (Exception ex)
@@ -911,7 +910,7 @@ namespace MipUnitTest
             }
         }
 
-        [TestMethod, Description("Validate that the concatenation where nulls are present.")]
+        [Fact(DisplayName = "Validate that the concatenation where nulls are present.")]
         public void AutoMappperMapping_ConcatWithEmptyList()
         {
             // Arrange
@@ -929,7 +928,7 @@ namespace MipUnitTest
                 var output = mapper.TransformIntoJson(JsonConvert.DeserializeObject<JObject>(inputJson), true);
                 string expectedOutput = "{ \"batchId\": \"d7620d3b-188a-49a0-b540-29de82b6ae1c\", \"messageCorrelationId\": \"6a87a56f-618c-4d0b-ac96-09adad1f99d5\", \"responseId\": \"bcf0f3d0-7053-4924-b773-11776daf7692\", \"success\": false, \"EmailAddress\": \"P75LIOT4USIPA7RXVMPG@mipFT.com\", \"data\": { \"EmailAddress\": \"P75LIOT4USIPA7RXVMPG@mipFT.com\", \"success\": false, \"errors\": [ { \"message\": \"Validation Failed.\", \"type\": \"Validation Error\", \"validationErrors\": [ \"\" ] } ] } } ";
 
-                Assert.IsTrue(JToken.DeepEquals(output, JObject.Parse(expectedOutput)));
+                Assert.True(JToken.DeepEquals(output, JObject.Parse(expectedOutput)));
 
             }
             catch (Exception ex)
@@ -938,7 +937,7 @@ namespace MipUnitTest
             }
         }
 
-        [TestMethod, Description("Validate that the DateTime offset is removed from the value to be returned.")]
+        [Fact(DisplayName = "Validate that the DateTime offset is removed from the value to be returned.")]
         public void AutoMappperMapping_RemoveDateTimeOffsetTest_WithOffset()
         {
             // Arrange
@@ -956,7 +955,7 @@ namespace MipUnitTest
                 var output = mapper.TransformIntoJson(JsonConvert.DeserializeObject<JObject>(inputJson), true);
                 string expectedOutput = "{\r\n  \"ProgramId\": \"V1|OneGDC|10585\",\r\n  \"TacticName\": \"CO-Azure-WBNR-FY16-07Jul-AADP Quick Wins AM1\",\r\n  \"PromotionCode\": \"CO-Azure-WBNR-FY16-07Jul-AADP Quick Wins AM1\",\r\n  \"GEPName\": \"Azure Platform\",\r\n  \"TacticStartDate\": \"2015-06-26T15:00:00Z\",\r\n  \"TacticEndDate\": \"2015-06-26T15:55:00Z\",\r\n  \"Source\": \"Marketing\",\r\n  \"Id\": \"55a11e81-7e0a-4628-b489-b9db3ff8acac\",\r\n  \"Origin\": {\r\n    \"DisplayValue\": \"Marketing\",\r\n    \"OptionSetId\": 861980001\r\n  }\r\n}";
                 JObject j = JObject.Parse(expectedOutput);
-                Assert.IsTrue(JToken.DeepEquals(JObject.Parse(output.ToString()), JObject.Parse(expectedOutput)));
+                Assert.True(JToken.DeepEquals(JObject.Parse(output.ToString()), JObject.Parse(expectedOutput)));
 
             }
             catch (Exception ex)
@@ -965,7 +964,7 @@ namespace MipUnitTest
             }
         }
 
-        [TestMethod, Description("Validate that the DateTime is sent as it is if no offset is present.")]
+        [Fact(DisplayName = "Validate that the DateTime is sent as it is if no offset is present.")]
         public void AutoMappperMapping_RemoveDateTimeOffsetTest_WithoutOffset()
         {
             // Arrange
@@ -983,7 +982,7 @@ namespace MipUnitTest
                 var output = mapper.TransformIntoJson(JsonConvert.DeserializeObject<JObject>(inputJson), true);
                 string expectedOutput = "{\r\n  \"ProgramId\": \"V1|OneGDC|10585\",\r\n  \"TacticName\": \"CO-Azure-WBNR-FY16-07Jul-AADP Quick Wins AM1\",\r\n  \"PromotionCode\": \"CO-Azure-WBNR-FY16-07Jul-AADP Quick Wins AM1\",\r\n  \"GEPName\": \"Azure Platform\",\r\n  \"TacticStartDate\": \"2015-06-26T15:00:00\",\r\n  \"TacticEndDate\": \"2015-06-26T15:55:00\",\r\n  \"Source\": \"Marketing\",\r\n  \"Id\": \"55a11e81-7e0a-4628-b489-b9db3ff8acac\",\r\n  \"Origin\": {\r\n    \"DisplayValue\": \"Marketing\",\r\n    \"OptionSetId\": 861980001\r\n  }\r\n}";
                 JObject j = JObject.Parse(expectedOutput);
-                Assert.IsTrue(JToken.DeepEquals(JObject.Parse(output.ToString()), JObject.Parse(expectedOutput)));
+                Assert.True(JToken.DeepEquals(JObject.Parse(output.ToString()), JObject.Parse(expectedOutput)));
 
             }
             catch (Exception ex)
@@ -992,7 +991,7 @@ namespace MipUnitTest
             }
         }
 
-        [TestMethod, Description("Validate ReplaceValueFunction.")]
+        [Fact(DisplayName = "Validate ReplaceValueFunction.")]
         public void AutoMappperMapping_ReplaceValueFunction_HappyPath()
         {
             // Arrange
@@ -1010,7 +1009,7 @@ namespace MipUnitTest
                 var output = mapper.TransformIntoJson(JsonConvert.DeserializeObject<JObject>(inputJson), true);
                 string expectedOutput = "{ \"LeadId\":\"leadId1\", \"MainPhone\":\"12345\" }";
                 JObject j = JObject.Parse(expectedOutput);
-                Assert.IsTrue(JToken.DeepEquals(JObject.Parse(output.ToString()), JObject.Parse(expectedOutput)));
+                Assert.True(JToken.DeepEquals(JObject.Parse(output.ToString()), JObject.Parse(expectedOutput)));
 
             }
             catch (Exception ex)
@@ -1019,7 +1018,7 @@ namespace MipUnitTest
             }
         }
 
-        [TestMethod, Description("Validate ReplaceValueFunction.")]
+        [Fact(DisplayName = "Validate ReplaceValueFunction.")]
         public void AutoMappperMapping_ReplaceValueFunction_ParamNull()
         {
             // Arrange
@@ -1037,7 +1036,7 @@ namespace MipUnitTest
                 var output = mapper.TransformIntoJson(JsonConvert.DeserializeObject<JObject>(inputJson), true);
                 string expectedOutput = "{ \"LeadId\":\"leadId1\", \"MainPhone\":\"67890\" }";
                 JObject j = JObject.Parse(expectedOutput);
-                Assert.IsTrue(JToken.DeepEquals(JObject.Parse(output.ToString()), JObject.Parse(expectedOutput)));
+                Assert.True(JToken.DeepEquals(JObject.Parse(output.ToString()), JObject.Parse(expectedOutput)));
 
             }
             catch (Exception ex)
@@ -1046,7 +1045,7 @@ namespace MipUnitTest
             }
         }
 
-        [TestMethod, Description("Validate ReplaceValueFunction.")]
+        [Fact(DisplayName = "Validate ReplaceValueFunction.")]
         public void AutoMappperMapping_ReplaceValueFunction_ParamNotPresent()
         {
             // Arrange
@@ -1064,7 +1063,7 @@ namespace MipUnitTest
                 var output = mapper.TransformIntoJson(JsonConvert.DeserializeObject<JObject>(inputJson), true);
                 string expectedOutput = "{ \"LeadId\":\"leadId1\", \"MainPhone\":\"67890\" }";
                 JObject j = JObject.Parse(expectedOutput);
-                Assert.IsTrue(JToken.DeepEquals(JObject.Parse(output.ToString()), JObject.Parse(expectedOutput)));
+                Assert.True(JToken.DeepEquals(JObject.Parse(output.ToString()), JObject.Parse(expectedOutput)));
 
             }
             catch (Exception ex)
@@ -1073,7 +1072,7 @@ namespace MipUnitTest
             }
         }
 
-        [TestMethod, Description("Validate ReplaceValueFunction.")]
+        [Fact(DisplayName = "Validate ReplaceValueFunction.")]
         public void AutoMappperMapping_ReplaceValueFunction_ReturnValueNullParamNull()
         {
             // Arrange
@@ -1091,7 +1090,7 @@ namespace MipUnitTest
                 var output = mapper.TransformIntoJson(JsonConvert.DeserializeObject<JObject>(inputJson), true);
                 string expectedOutput = "{ \"LeadId\":\"leadId1\" }";
                 JObject j = JObject.Parse(expectedOutput);
-                Assert.IsTrue(JToken.DeepEquals(JObject.Parse(output.ToString()), JObject.Parse(expectedOutput)));
+                Assert.True(JToken.DeepEquals(JObject.Parse(output.ToString()), JObject.Parse(expectedOutput)));
 
             }
             catch (Exception ex)
@@ -1100,7 +1099,7 @@ namespace MipUnitTest
             }
         }
 
-        [TestMethod, Description("Validate ReplaceValueFunction.")]
+        [Fact(DisplayName = "Validate ReplaceValueFunction.")]
         public void AutoMappperMapping_ReplaceValueFunction_ParamEmptyString()
         {
             // Arrange
@@ -1118,7 +1117,7 @@ namespace MipUnitTest
                 var output = mapper.TransformIntoJson(JsonConvert.DeserializeObject<JObject>(inputJson), true);
                 string expectedOutput = "{ \"LeadId\":\"leadId1\", \"MainPhone\":\"\" }";
                 JObject j = JObject.Parse(expectedOutput);
-                Assert.IsTrue(JToken.DeepEquals(JObject.Parse(output.ToString()), JObject.Parse(expectedOutput)));
+                Assert.True(JToken.DeepEquals(JObject.Parse(output.ToString()), JObject.Parse(expectedOutput)));
 
             }
             catch (Exception ex)
@@ -1127,7 +1126,7 @@ namespace MipUnitTest
             }
         }
 
-        [TestMethod, Description("Validate ReplaceValueFunction.")]
+        [Fact(DisplayName = "Validate ReplaceValueFunction.")]
         public void AutoMappperMapping_ReplaceValueFunction_ParamWhiteSpace()
         {
             // Arrange
@@ -1145,7 +1144,7 @@ namespace MipUnitTest
                 var output = mapper.TransformIntoJson(JsonConvert.DeserializeObject<JObject>(inputJson), true);
                 string expectedOutput = "{ \"LeadId\":\"leadId1\", \"MainPhone\":\" \" }";
                 JObject j = JObject.Parse(expectedOutput);
-                Assert.IsTrue(JToken.DeepEquals(JObject.Parse(output.ToString()), JObject.Parse(expectedOutput)));
+                Assert.True(JToken.DeepEquals(JObject.Parse(output.ToString()), JObject.Parse(expectedOutput)));
 
             }
             catch (Exception ex)
@@ -1154,7 +1153,7 @@ namespace MipUnitTest
             }
         }
 
-        [TestMethod, Description("Validate ReplaceValueFunction.")]
+        [Fact(DisplayName = "Validate ReplaceValueFunction.")]
         public void AutoMappperMapping_ReplaceValueFunction_ParamNullReturnValueEmpty()
         {
             // Arrange
@@ -1172,7 +1171,7 @@ namespace MipUnitTest
                 var output = mapper.TransformIntoJson(JsonConvert.DeserializeObject<JObject>(inputJson), true);
                 string expectedOutput = "{ \"LeadId\":\"leadId1\", \"MainPhone\":\"\" }";
                 JObject j = JObject.Parse(expectedOutput);
-                Assert.IsTrue(JToken.DeepEquals(JObject.Parse(output.ToString()), JObject.Parse(expectedOutput)));
+                Assert.True(JToken.DeepEquals(JObject.Parse(output.ToString()), JObject.Parse(expectedOutput)));
 
             }
             catch (Exception ex)
@@ -1181,7 +1180,7 @@ namespace MipUnitTest
             }
         }
 
-        [TestMethod, Description("Validate ReplaceValueFunction.")]
+        [Fact(DisplayName = "Validate ReplaceValueFunction.")]
         public void AutoMappperMapping_ReplaceValueFunction_ParamEmptyStringWithIgnoreEmptyParamEnabled()
         {
             // Arrange
@@ -1199,7 +1198,7 @@ namespace MipUnitTest
                 var output = mapper.TransformIntoJson(JsonConvert.DeserializeObject<JObject>(inputJson), true);
                 string expectedOutput = "{ \"LeadId\":\"leadId1\", \"MainPhone\":\"67890\" }";
                 JObject j = JObject.Parse(expectedOutput);
-                Assert.IsTrue(JToken.DeepEquals(JObject.Parse(output.ToString()), JObject.Parse(expectedOutput)));
+                Assert.True(JToken.DeepEquals(JObject.Parse(output.ToString()), JObject.Parse(expectedOutput)));
 
             }
             catch (Exception ex)
@@ -1208,7 +1207,7 @@ namespace MipUnitTest
             }
         }
 
-        [TestMethod, Description("Validate ReplaceValueFunction.")]
+        [Fact(DisplayName = "Validate ReplaceValueFunction.")]
         public void AutoMappperMapping_ReplaceValueFunction_ParamWhiteSpaceStringWithIgnoreEmptyParamEnabled()
         {
             // Arrange
@@ -1226,7 +1225,7 @@ namespace MipUnitTest
                 var output = mapper.TransformIntoJson(JsonConvert.DeserializeObject<JObject>(inputJson), true);
                 string expectedOutput = "{ \"LeadId\":\"leadId1\", \"MainPhone\":\"67890\" }";
                 JObject j = JObject.Parse(expectedOutput);
-                Assert.IsTrue(JToken.DeepEquals(JObject.Parse(output.ToString()), JObject.Parse(expectedOutput)));
+                Assert.True(JToken.DeepEquals(JObject.Parse(output.ToString()), JObject.Parse(expectedOutput)));
 
             }
             catch (Exception ex)
@@ -1234,7 +1233,7 @@ namespace MipUnitTest
                 Assert.Fail("Test failed: " + ex.Message);
             }
         }
-        [TestMethod, Description("Test one to one mapping functionality")]
+        [Fact(DisplayName = "Test one to one mapping functionality")]
         public void OneToOneMappingTest()
         {
             //Arrange
@@ -1255,12 +1254,12 @@ namespace MipUnitTest
              var output = mapper.TransformIntoJson(JsonConvert.DeserializeObject<JObject>(input), true);
 
             //Assert
-            Assert.AreEqual("Financial Services", output.SelectToken("$.Industry").ToString());
+            Assert.Equal("Financial Services", output.SelectToken("$.Industry").ToString());
 
         }
 
 
-        [TestMethod, Description("Test range mapping functionality")]
+        [Fact(DisplayName = "Test range mapping functionality")]
         public void RangeMappingTest()
         {
             //Arrange
@@ -1281,11 +1280,11 @@ namespace MipUnitTest
             var output = mapper.TransformIntoJson(JsonConvert.DeserializeObject<JObject>(input), true);
 
             //Assert
-            Assert.AreEqual("51to250employees", output.SelectToken("$.CompanySize").ToString());
+            Assert.Equal("51to250employees", output.SelectToken("$.CompanySize").ToString());
 
         }
 
-        [TestMethod, Description("Test for UriEscapeDataString HappyPath With Escape character as Ampersand")]
+        [Fact(DisplayName = "Test for UriEscapeDataString HappyPath With Escape character as Ampersand")]
         public void FunctionHanlder_UriEscapeDataString_HappyPath_Ampersand()
         {
             // Arrange
@@ -1296,10 +1295,10 @@ namespace MipUnitTest
             var mapper = new AutoMapper(mappingJson);
             var output = mapper.TransformIntoJson(JsonConvert.DeserializeObject<JObject>(inputJson), true);
             string expectedOutput = "{ \"message\": \"https://social.sprinklr.com/selling/search/company?companyName=Procter%20%26%20Gamble%20Company&countryName=Bulgaria&state=&city=Sofia&zipCode=1510&DunnsId=\" }";
-            Assert.IsTrue(JToken.DeepEquals(output, JObject.Parse(expectedOutput)));
+            Assert.True(JToken.DeepEquals(output, JObject.Parse(expectedOutput)));
         }
 
-        [TestMethod, Description("Test for UriEscapeDataString HappyPath With Escape character as Dollar")]
+        [Fact(DisplayName = "Test for UriEscapeDataString HappyPath With Escape character as Dollar")]
         public void FunctionHanlder_UriEscapeDataString_HappyPath_Dollar()
         {
             // Arrange
@@ -1310,11 +1309,11 @@ namespace MipUnitTest
             var mapper = new AutoMapper(mappingJson);
             var output = mapper.TransformIntoJson(JsonConvert.DeserializeObject<JObject>(inputJson), true);
             string expectedOutput = "{ \"message\": \"https://social.sprinklr.com/selling/search/company?companyName=Procter%20%24%20Gamble%20Company&countryName=Bulgaria&state=&city=Sofia&zipCode=1510&DunnsId=\" }";
-            Assert.IsTrue(JToken.DeepEquals(output, JObject.Parse(expectedOutput)));
+            Assert.True(JToken.DeepEquals(output, JObject.Parse(expectedOutput)));
 
         }
 
-        [TestMethod, Description("Test for UriEscapeDataString HappyPath With Escape character as Plus")]
+        [Fact(DisplayName = "Test for UriEscapeDataString HappyPath With Escape character as Plus")]
         public void FunctionHanlder_UriEscapeDataString_HappyPath_Plus()
         {
             // Arrange
@@ -1325,11 +1324,11 @@ namespace MipUnitTest
             var mapper = new AutoMapper(mappingJson);
             var output = mapper.TransformIntoJson(JsonConvert.DeserializeObject<JObject>(inputJson), true);
             string expectedOutput = "{ \"message\": \"https://social.sprinklr.com/selling/search/company?companyName=Procter%20%2B%20Gamble%20Company&countryName=Bulgaria%2B&state=&city=Sofia&zipCode=1510&DunnsId=\" }";
-            Assert.IsTrue(JToken.DeepEquals(output, JObject.Parse(expectedOutput)));
+            Assert.True(JToken.DeepEquals(output, JObject.Parse(expectedOutput)));
 
         }
 
-        [TestMethod, Description("Test for UriEscapeDataString HappyPath With Escape character as Space")]
+        [Fact(DisplayName =  "Test for UriEscapeDataString HappyPath With Escape character as Space")]
         public void FunctionHanlder_UriEscapeDataString_HappyPath_Space()
         {
             // Arrange
@@ -1340,10 +1339,10 @@ namespace MipUnitTest
             var mapper = new AutoMapper(mappingJson);
             var output = mapper.TransformIntoJson(JsonConvert.DeserializeObject<JObject>(inputJson), true);
             string expectedOutput = "{ \"message\": \"https://social.sprinklr.com/selling/search/company?companyName=Procter%20Gamble%20Company&countryName=Bulgaria%20&state=&city=Sofia&zipCode=1510&DunnsId=\" }";
-            Assert.IsTrue(JToken.DeepEquals(output, JObject.Parse(expectedOutput)));
+            Assert.True(JToken.DeepEquals(output, JObject.Parse(expectedOutput)));
         }
 
-        [TestMethod, Description("Test for UriEscapeDataString HappyPath With Escape character as Percent")]
+        [Fact(DisplayName = "Test for UriEscapeDataString HappyPath With Escape character as Percent")]
         public void FunctionHanlder_UriEscapeDataString_HappyPath_Percent()
         {
             // Arrange
@@ -1354,11 +1353,11 @@ namespace MipUnitTest
             var mapper = new AutoMapper(mappingJson);
             var output = mapper.TransformIntoJson(JsonConvert.DeserializeObject<JObject>(inputJson), true);
             string expectedOutput = "{ \"message\": \"https://social.sprinklr.com/selling/search/company?companyName=Procter%25Gamble%20Company&countryName=Bulgaria%20&state=&city=Sofia&zipCode=1510&DunnsId=\" }";
-            Assert.IsTrue(JToken.DeepEquals(output, JObject.Parse(expectedOutput)));
+            Assert.True(JToken.DeepEquals(output, JObject.Parse(expectedOutput)));
 
         }
 
-        [TestMethod, Description("Test for UriEscapeDataString HappyPath With Escape character as Exclamation")]
+        [Fact(DisplayName = "Test for UriEscapeDataString HappyPath With Escape character as Exclamation")]
         public void FunctionHanlder_UriEscapeDataString_HappyPath_Exclamation()
         {
             // Arrange
@@ -1369,10 +1368,10 @@ namespace MipUnitTest
             var mapper = new AutoMapper(mappingJson);
             var output = mapper.TransformIntoJson(JsonConvert.DeserializeObject<JObject>(inputJson), true);
             string expectedOutput = "{ \"message\": \"https://social.sprinklr.com/selling/search/company?companyName=Procter%21Gamble%20Company&countryName=Bulgaria%20&state=&city=Sofia&zipCode=1510&DunnsId=\" }";
-            Assert.IsTrue(JToken.DeepEquals(output, JObject.Parse(expectedOutput)));
+            Assert.True(JToken.DeepEquals(output, JObject.Parse(expectedOutput)));
         }
 
-        [TestMethod, Description("Test for UriEscapeDataString Null Paramters")]
+        [Fact(DisplayName = "Test for UriEscapeDataString Null Paramters")]
         public void FunctionHanlder_UriEscapeDataString_Null_Parameters()
         {
             // Arrange
@@ -1383,10 +1382,10 @@ namespace MipUnitTest
             var mapper = new AutoMapper(mappingJson);
             var output = mapper.TransformIntoJson(JsonConvert.DeserializeObject<JObject>(inputJson), true);
             // string expectedOutput = "{ \"message\": \"https://social.sprinklr.com/selling/search/company?companyName=Procter%21Gamble%20Company&countryName=Bulgaria%20&state=&city=Sofia&zipCode=1510&DunnsId=\" }";
-            Assert.IsTrue(JToken.DeepEquals(output, new JObject()));
+            Assert.True(JToken.DeepEquals(output, new JObject()));
         }
 
-        [TestMethod, Description("Test for UriEscapeDataString One Null Paramter")]
+        [Fact(DisplayName = "Test for UriEscapeDataString One Null Paramter")]
         public void FunctionHanlder_UriEscapeDataString_One_Null_Parameter()
         {
             // Arrange
@@ -1397,10 +1396,10 @@ namespace MipUnitTest
             var mapper = new AutoMapper(mappingJson);
             var output = mapper.TransformIntoJson(JsonConvert.DeserializeObject<JObject>(inputJson), true);
             string expectedOutput = "{ \"message\": \"https://social.sprinklr.com/selling/search/company?companyName=Procter%21Gamble%20Company&countryName=Bulgaria &state=&city=Sofia&zipCode=1510&DunnsId=\" }";
-            Assert.IsTrue(JToken.DeepEquals(output, JObject.Parse(expectedOutput)));
+            Assert.True(JToken.DeepEquals(output, JObject.Parse(expectedOutput)));
         }
 
-        [TestMethod, Description("Test for UriEscapeDataString With Invalid Parameter Field")]
+        [Fact(DisplayName = "Test for UriEscapeDataString With Invalid Parameter Field")]
         public void FunctionHanlder_UriEscapeDataString_Invalid_Parameter_Field()
         {
             // Arrange
@@ -1411,7 +1410,7 @@ namespace MipUnitTest
             var mapper = new AutoMapper(mappingJson);
             var output = mapper.TransformIntoJson(JsonConvert.DeserializeObject<JObject>(inputJson), true);
             string expectedOutput = "{ \"message\": \"https://social.sprinklr.com/selling/search/company?companyName=Procter%21Gamble%20Company&countryName=Bulgaria%20&state=&city=Sofia&zipCode=1510&DunnsId=\" }";
-            Assert.IsTrue(JToken.DeepEquals(output, JObject.Parse(expectedOutput)));
+            Assert.True(JToken.DeepEquals(output, JObject.Parse(expectedOutput)));
         }
 
     }
